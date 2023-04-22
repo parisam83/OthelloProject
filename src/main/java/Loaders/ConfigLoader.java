@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class ConfigLoader extends Properties {
-    private static final String defaultAddress = "resources/config.properties";
+    private static final String defaultAddress = "src/main/resources/config.properties";
     private static ConfigLoader instance;
 
     public static ConfigLoader getInstance(){
@@ -29,7 +29,7 @@ public class ConfigLoader extends Properties {
     }
 
     public <E> E getProperty(Class<E> c, String propertyName) {
-        return getObject(c, propertyName);
+        return getObject(c, getProperty(propertyName));
     }
 
     public <E> List<E> getPropertyList(Class<E> c, String propertyName) {
@@ -40,15 +40,14 @@ public class ConfigLoader extends Properties {
         }
         return list;
     }
-    private <E> E getObject(Class<E> c, String propertyName){
+    private <E> E getObject(Class<E> c, String value){
         E e = null;
         try {
             Constructor<E> constructor = c.getConstructor(String.class);
-            e = constructor.newInstance(propertyName);
+            e = constructor.newInstance(value);
         } catch (ReflectiveOperationException exception) {
             exception.printStackTrace();
         }
-
         return e;
     }
 }
